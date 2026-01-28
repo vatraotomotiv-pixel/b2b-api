@@ -1,0 +1,11 @@
+C:\Users\Burak\Deneme\Documents\MMORPG_Project\B2B_PROJECT\B2B.Core\bin\Debug\net10.0\B2B.Core.deps.json
+C:\Users\Burak\Deneme\Documents\MMORPG_Project\B2B_PROJECT\B2B.Core\bin\Debug\net10.0\B2B.Core.dll
+C:\Users\Burak\Deneme\Documents\MMORPG_Project\B2B_PROJECT\B2B.Core\bin\Debug\net10.0\B2B.Core.pdb
+C:\Users\Burak\Deneme\Documents\MMORPG_Project\B2B_PROJECT\B2B.Core\obj\Debug\net10.0\B2B.Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Burak\Deneme\Documents\MMORPG_Project\B2B_PROJECT\B2B.Core\obj\Debug\net10.0\B2B.Core.AssemblyInfoInputs.cache
+C:\Users\Burak\Deneme\Documents\MMORPG_Project\B2B_PROJECT\B2B.Core\obj\Debug\net10.0\B2B.Core.AssemblyInfo.cs
+C:\Users\Burak\Deneme\Documents\MMORPG_Project\B2B_PROJECT\B2B.Core\obj\Debug\net10.0\B2B.Core.csproj.CoreCompileInputs.cache
+C:\Users\Burak\Deneme\Documents\MMORPG_Project\B2B_PROJECT\B2B.Core\obj\Debug\net10.0\B2B.Core.dll
+C:\Users\Burak\Deneme\Documents\MMORPG_Project\B2B_PROJECT\B2B.Core\obj\Debug\net10.0\refint\B2B.Core.dll
+C:\Users\Burak\Deneme\Documents\MMORPG_Project\B2B_PROJECT\B2B.Core\obj\Debug\net10.0\B2B.Core.pdb
+C:\Users\Burak\Deneme\Documents\MMORPG_Project\B2B_PROJECT\B2B.Core\obj\Debug\net10.0\ref\B2B.Core.dll

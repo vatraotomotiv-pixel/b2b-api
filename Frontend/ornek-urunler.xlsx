@@ -1,0 +1,13 @@
+Bu dosya Excel formatında olmalı. Gerçek Excel dosyası oluşturulamaz, manuel oluşturman gerekiyor.
+
+Excel'de şu kolonları oluştur:
+A: ProductCode
+B: Name  
+C: PackageQuantity
+D: Price
+E: CurrencyCode
+
+Örnek satırlar:
+PROD001 | Ürün 1 | 12 | 99.99 | USD
+PROD002 | Ürün 2 | 24 | 149.50 | EUR
+PROD003 | Ürün 3 | 6 | 75.00 | TRY

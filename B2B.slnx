@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="B2B.API/B2B.API.csproj" />
+  <Project Path="B2B.Core/B2B.Core.csproj" />
+  <Project Path="B2B.Infrastructure/B2B.Infrastructure.csproj" />
+</Solution>
