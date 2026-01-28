@@ -56,6 +56,17 @@ builder.Services.AddScoped<IProductService, B2B.Infrastructure.Services.ProductS
 
 var app = builder.Build();
 
+// /health en basta yanitlansin (Render probe, uygulama tam acilmadan da calissin)
+app.Use(async (context, next) =>
+{
+    if (context.Request.Path.StartsWithSegments("/health", StringComparison.OrdinalIgnoreCase))
+    {
+        await context.Response.WriteAsJsonAsync(new { status = "healthy", timestamp = DateTime.UtcNow });
+        return;
+    }
+    await next(context);
+});
+
 // Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
