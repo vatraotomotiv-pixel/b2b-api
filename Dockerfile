@@ -1,5 +1,5 @@
 # B2B API - Render / Docker
-FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
 COPY B2B.API/B2B.API.csproj B2B.API/
@@ -10,7 +10,7 @@ RUN dotnet restore B2B.API/B2B.API.csproj
 COPY . .
 RUN dotnet publish B2B.API/B2B.API.csproj -c Release -o /app/publish --no-restore
 
-FROM mcr.microsoft.com/dotnet/aspnet:10.0
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 COPY --from=build /app/publish .
 # Render PORT env kullanilir

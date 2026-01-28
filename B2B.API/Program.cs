@@ -19,7 +19,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddDbContext<B2BDbContext>(options =>
     options.UseMySql(
         builder.Configuration.GetConnectionString("DefaultConnection"),
-        new MySqlServerVersion(new Version(10, 0, 0))
+        new MySqlServerVersion(new Version(8, 0, 0))
     ));
 
 // CORS
