@@ -20,16 +20,8 @@ public class ProductsController : ControllerBase
         [FromQuery] string? language = null,
         [FromQuery] string? currency = null)
     {
-        try
-        {
-            var products = await _productService.GetAllProductsAsync(language, currency);
-            return Ok(products);
-        }
-        catch (Exception)
-        {
-            // MySQL baglantisi yoksa veya hata varsa bos liste don (500 verme)
-            return Ok(new List<Product>());
-        }
+        var products = await _productService.GetAllProductsAsync(language, currency);
+        return Ok(products);
     }
 
     [HttpGet("{id}")]

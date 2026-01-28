@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using B2B.Infrastructure.Data;
 using B2B.Core.Services;
+using B2B.Core.Entities;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,12 +16,24 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Database - MySQL (XAMPP)
-builder.Services.AddDbContext<B2BDbContext>(options =>
-    options.UseMySql(
-        builder.Configuration.GetConnectionString("DefaultConnection"),
-        new MySqlServerVersion(new Version(8, 0, 0))
-    ));
+// Database: Render'da (RENDER=true) veya connection string yoksa SQLite; yoksa MySQL
+var connStr = builder.Configuration.GetConnectionString("DefaultConnection");
+var useSqlite = Environment.GetEnvironmentVariable("RENDER") == "true"
+    || string.IsNullOrWhiteSpace(connStr)
+    || !connStr.TrimStart().StartsWith("Server=", StringComparison.OrdinalIgnoreCase);
+if (!useSqlite)
+{
+    builder.Services.AddDbContext<B2BDbContext>(options =>
+        options.UseMySql(connStr, new MySqlServerVersion(new Version(8, 0, 0))));
+}
+else
+{
+    var dataDir = Path.Combine(Directory.GetCurrentDirectory(), "data");
+    Directory.CreateDirectory(dataDir);
+    var sqlitePath = Path.Combine(dataDir, "b2b.db");
+    builder.Services.AddDbContext<B2BDbContext>(options =>
+        options.UseSqlite($"Data Source={sqlitePath}"));
+}
 
 // CORS
 builder.Services.AddCors(options =>
@@ -55,6 +68,28 @@ builder.Services.AddCors(options =>
 builder.Services.AddScoped<IProductService, B2B.Infrastructure.Services.ProductService>();
 
 var app = builder.Build();
+
+// SQLite kullaniliyorsa DB olustur ve ornek urunleri yukle (ilk acilista)
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<B2BDbContext>();
+    db.Database.EnsureCreated();
+    if (!db.Products.Any())
+    {
+        var now = DateTime.UtcNow;
+        var p1 = new Product { ProductCode = "PROD001", Name = "Ürün 1", PackageQuantity = 12, Price = 99.99m, CurrencyCode = "USD", ImageUrl = "/images/products/PROD001.jpg", IsActive = true, CreatedAt = now, UpdatedAt = now };
+        var p2 = new Product { ProductCode = "PROD002", Name = "Ürün 2", PackageQuantity = 24, Price = 149.50m, CurrencyCode = "EUR", ImageUrl = "/images/products/PROD002.jpg", IsActive = true, CreatedAt = now, UpdatedAt = now };
+        var p3 = new Product { ProductCode = "PROD003", Name = "Ürün 3", PackageQuantity = 6, Price = 75.00m, CurrencyCode = "TRY", ImageUrl = "/images/products/PROD003.jpg", IsActive = true, CreatedAt = now, UpdatedAt = now };
+        p1.Translations.Add(new ProductTranslation { LanguageCode = "tr", Name = "Ürün 1 - Türkçe" });
+        p1.Translations.Add(new ProductTranslation { LanguageCode = "en", Name = "Product 1 - English" });
+        p2.Translations.Add(new ProductTranslation { LanguageCode = "tr", Name = "Ürün 2 - Türkçe" });
+        p2.Translations.Add(new ProductTranslation { LanguageCode = "en", Name = "Product 2 - English" });
+        p3.Translations.Add(new ProductTranslation { LanguageCode = "tr", Name = "Ürün 3 - Türkçe" });
+        p3.Translations.Add(new ProductTranslation { LanguageCode = "en", Name = "Product 3 - English" });
+        db.Products.AddRange(p1, p2, p3);
+        db.SaveChanges();
+    }
+}
 
 // /health en basta yanitlansin (Render probe, uygulama tam acilmadan da calissin)
 app.Use(async (context, next) =>
