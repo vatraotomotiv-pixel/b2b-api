@@ -13,7 +13,7 @@ if (!string.IsNullOrEmpty(port))
 // Add services to the container
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddOpenApi();
+builder.Services.AddSwaggerGen();
 
 // Database - MySQL (XAMPP)
 builder.Services.AddDbContext<B2BDbContext>(options =>
@@ -59,7 +59,8 @@ var app = builder.Build();
 // Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 // HTTPS redirection sadece production'da
@@ -88,7 +89,7 @@ app.MapGet("/", () => Results.Content("""
 <ul>
 <li><a href="/health">/health</a> - Saglik kontrolu</li>
 <li><a href="/api/products">/api/products</a> - Urunler</li>
-<li><a href="/openapi/v1.json">/openapi/v1.json</a> - API dokumani</li>
+<li><a href="/swagger">/swagger</a> - API dokumani</li>
 </ul>
 </body>
 </html>
