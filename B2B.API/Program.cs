@@ -18,7 +18,7 @@ builder.Services.AddSwaggerGen();
 
 // Database: Render'da (RENDER=true) veya connection string yoksa SQLite; yoksa MySQL
 var connStr = builder.Configuration.GetConnectionString("DefaultConnection");
-var useSqlite = Environment.GetEnvironmentVariable("RENDER") == "true"
+var useSqlite = string.Equals(Environment.GetEnvironmentVariable("RENDER"), "true", StringComparison.OrdinalIgnoreCase)
     || string.IsNullOrWhiteSpace(connStr)
     || !connStr.TrimStart().StartsWith("Server=", StringComparison.OrdinalIgnoreCase);
 if (!useSqlite)
@@ -70,9 +70,11 @@ builder.Services.AddScoped<IProductService, B2B.Infrastructure.Services.ProductS
 var app = builder.Build();
 
 // SQLite kullaniliyorsa DB olustur ve ornek urunleri yukle (ilk acilista)
-using (var scope = app.Services.CreateScope())
+try
 {
+    using var scope = app.Services.CreateScope();
     var db = scope.ServiceProvider.GetRequiredService<B2BDbContext>();
+    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
     db.Database.EnsureCreated();
     if (!db.Products.Any())
     {
@@ -88,7 +90,12 @@ using (var scope = app.Services.CreateScope())
         p3.Translations.Add(new ProductTranslation { LanguageCode = "en", Name = "Product 3 - English" });
         db.Products.AddRange(p1, p2, p3);
         db.SaveChanges();
+        logger.LogInformation("B2B seed: 3 urun eklendi.");
     }
+}
+catch (Exception)
+{
+    // Seed basarisiz - uygulama yine de calisir, urunler bos olur
 }
 
 // /health en basta yanitlansin (Render probe, uygulama tam acilmadan da calissin)
